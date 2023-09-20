@@ -1,0 +1,55 @@
+This section includes an explanation on the Spanning Tree Algorithm
+Prerequisites: Ethernet Loops and STP to prevent them
+
+Steps to a Loop-Free Topology:
+  a. Elect the root bridge
+  b. Elect Root ports
+  c. Elect Designated portd
+  d. Elect alternate(Blocked Ports)
+
+During STA or STP functions, During STA and STP functions, switches use Bridge Protocol Data Units (BPDUs) to share information about themselves and their connections.
+So, BPDUs are used to elect root bridges, root ports, designated ports and alternate ports
+Each BPDU contains (Bridge ID)BID that identifies which switch sent BPDU
+The BID Consists of:
+  1. Bridge Priority - (4 bits)
+  2. Extended System - (12 Bits)
+  3. MAC Address - 48 (bits)
+
+1. Elect the Root Bridge
+Switches exchange BPDUs to build the loop-free topology, beginning with selecting the root bridge. After the switch boots, it sends out BPDU frames every two seconds. The Bridge with the lowest bridge priority will become the root bridge; however, if the bridge priority of the switches is identical, the lowest MAC is considered.
+
+Once the Root bridge is determined, STA continues to determine the best paths to the root bridge from all the destinations in a broadcast domain. Internal port path costs are determined by the sum of all individual port costs along the path from the switch to the root bridge. Every BPDUs has the  best path costs.
+
+10 Gbps - 2
+1 Gbps - 4
+100 Mbps - 10
+10 Mbps - 100
+
+
+2. Elect the root ports
+After the root bridge has been determined, the STA algorithm is used to select the root port, and every non-root switch selects one root port. The root port is the port closest to the root bridge in terms of overall cost(Best path) to the root bridge.
+
+3. Elect Designated Ports
+Every segment between two switches will have one designated port. The designated port is a port on the segment (with two switches) that has the internal root path cost to the root bridge. In other words, the designated port has the best path to receive traffic leading to the root bridge.
+
+Elect a root port from multiple equal cost paths
+Root port and designated ports are based on the lowest path cost to the root bridge. But what happens if the switch has multiple equal-cost paths to the root bridge? How does a switch designate a root port?
+The Switch will determine the root port following the criteria
+  1. Lowest sender BID
+  2. Lowest Sender port priority
+  3. Lowest sender port ID
+Sender BID will be the same where two switches are connected with two equal-cost paths between them. However, the port priority by default is 128, then it will check for the lowest port ID.
+
+Hello Timer -The hello time is the interval between BPDUs. The default is 2 seconds but can be modified to between 1 and 10 seconds.
+Forward Delay Timer -The forward delay is the time that is spent in the listening and learning state. The default is 15 seconds but can be modified to between 4 and 30 seconds.
+Max Age Timer -The max age is the maximum length of time that a switch waits before attempting to change the STP topology. The default is 20 seconds but be modified to between 6 and 40 seconds.
+
+  
+
+
+
+
+
+
+
+
